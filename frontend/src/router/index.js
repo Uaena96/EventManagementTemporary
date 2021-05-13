@@ -88,7 +88,21 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/update-events',
+      path: '/view-events/:id',
+      name: 'ViewEvents',
+      component: () => import('@/views/ViewEvent.vue'),
+      meta: {
+        pageTitle: 'View Event',
+        breadcrumb: [
+          {
+            text: 'View Event',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/update-events/:id',
       name: 'UpdateEvents',
       component: () => import('@/views/UpdateEvent.vue'),
       meta: {

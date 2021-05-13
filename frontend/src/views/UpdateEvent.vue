@@ -9,6 +9,7 @@
         >
           <b-form-input
             id="v-event-name"
+            v-model="update_event.event_name"
             placeholder="Event Name"
           />
         </b-form-group>
@@ -22,6 +23,7 @@
         >
           <b-form-input
             id="v-description"
+            v-model="update_event.description"
             type="text"
             placeholder="Event Description"
           />
@@ -33,6 +35,7 @@
         <label for="example-datepicker">Start Date</label>
         <b-form-datepicker
           id="start-date"
+          v-model="update_event.start_date"
           class="mb-1"
         />
       </b-col>
@@ -41,6 +44,7 @@
         <label for="example-datepicker">End Date</label>
         <b-form-datepicker
           id="end-date"
+          v-model="update_event.end_date"
           class="mb-1"
         />
       </b-col>
@@ -52,6 +56,7 @@
         >
           <b-form-input
             id="v-event-organizer"
+            v-model="update_event.organizer"
             placeholder="Event Organizer"
           />
         </b-form-group>
@@ -64,16 +69,20 @@
           type="submit"
           variant="primary"
           class="mr-1"
+          @click="updateEvents"
         >
-          Submit
+          Update
         </b-button>
-        <b-button
-          v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-          type="reset"
-          variant="outline-secondary"
-        >
-          Reset
-        </b-button>
+
+        <router-link to="/events-list">
+          <b-button
+            v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+            type="reset"
+            variant="outline-secondary"
+          >
+            Cancel
+          </b-button>
+        </router-link>
       </b-col>
     </b-row>
   </b-form>
@@ -90,6 +99,7 @@ import {
   BFormDatepicker,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import apiService from '../helper/ApiService'
 
 export default {
   name: 'UpdateEvent',
@@ -104,6 +114,36 @@ export default {
   },
   directives: {
     Ripple,
+  },
+  data() {
+    return {
+      update_event: {
+        event_name: '',
+        description: '',
+        start_date: '',
+        end_date: '',
+        organizer: '',
+      },
+    }
+  },
+  mounted() {
+    this.getEventById()
+  },
+  created() {},
+  methods: {
+    async getEventById() {
+      const res = await apiService.getEventsById(
+        `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+      )
+      this.update_event = res.data
+    },
+    async updateEvents() {
+      await apiService.updateEvent(
+        `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+        this.update_event,
+      )
+      this.$router.push({ name: 'events-list' })
+    },
   },
 }
 </script>

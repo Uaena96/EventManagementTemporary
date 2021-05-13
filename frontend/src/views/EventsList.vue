@@ -6,7 +6,6 @@
         v-b-modal.addEventModal
         variant="outline-info"
         class="mb-2"
-        @click="addEvents"
       >
         <b-icon
           icon="plus"
@@ -42,43 +41,6 @@
         </b-form-group>
       </form>
     </b-modal>
-    <!-- end modal -->
-
-    <!-- <b-input-group
-      :size="'sm'"
-      class="mb-3"
-      prepend="EVENT ID"
-    >
-      <b-form-input v-model="id" />
-      <b-input-group-append>
-        <b-button
-          size="sm"
-          text="Button"
-          variant="success"
-          @click="updateEvents"
-        >
-          Update
-        </b-button>
-      </b-input-group-append>
-    </b-input-group>
-    <b-input-group
-      :size="'sm'"
-      class="mb-3"
-      prepend="EVENT ID"
-    >
-      <b-form-input v-model="del" />
-      <b-input-group-append>
-        <b-button
-          size="sm"
-          text="Button"
-          variant="danger"
-          @click="deleteEvent"
-          id="close"
-        >
-          Delete
-        </b-button>
-      </b-input-group-append>
-    </b-input-group> -->
 
     <!-- events list -->
     <b-table
@@ -87,8 +49,8 @@
       :items="events"
       :fields="fields"
     >
-      <template #cell(actions)>
-        <router-link to="/update-events">
+      <template #cell(actions)="data">
+        <router-link :to="`/view-events/${data.item.id}`">
           <b-button
             variant="warning"
             class="mr-2"
@@ -99,7 +61,10 @@
             />
           </b-button>
         </router-link>
-        <b-button variant="danger">
+        <b-button
+          variant="danger"
+          @click="deleteEvent(data.item.id)"
+        >
           <b-icon
             icon="trash"
             aria-hidden="true"
@@ -149,23 +114,6 @@ export default {
       this.events = res.data
     },
 
-    async addEvents() {
-      // sample data
-      const sample = {
-        event_name: 'Webinar',
-        description: 'dance tutorial',
-        organizer: 'Lalisa',
-        start_date: '2021-05-08T11:33:13.035Z',
-        end_date: '2021-05-09T11:33:13.035Z',
-      }
-
-      const res = await apiService.addEvent(
-        'http://127.0.0.1:8000/api/event',
-        sample,
-      )
-      console.log(res)
-      this.getEvents()
-    },
     async updateEvents() {
       // sample data
       const sample = {
@@ -179,9 +127,9 @@ export default {
       console.log(res)
       this.getEvents()
     },
-    async deleteEvent() {
+    async deleteEvent(id) {
       const res = await apiService.deleteEvent(
-        `http://127.0.0.1:8000/api/event/${this.del}`,
+        `http://127.0.0.1:8000/api/event/${id}`,
       )
       console.log(res)
       this.getEvents()
