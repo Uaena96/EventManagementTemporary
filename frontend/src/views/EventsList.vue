@@ -13,34 +13,6 @@
         /> Add Events
       </b-button>
     </router-link>
-    <!-- Add Event Modal -->
-    <b-modal
-      id="addEventModal"
-      ref="modal"
-      title="Add Event"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <form
-        ref="form"
-        @submit.stop.prevent="handleSubmit"
-      >
-        <b-form-group
-          label="Name"
-          label-for="name-input"
-          invalid-feedback="Name is required"
-          :state="nameState"
-        >
-          <b-form-input
-            id="name-input"
-            v-model="name"
-            :state="nameState"
-            required
-          />
-        </b-form-group>
-      </form>
-    </b-modal>
 
     <!-- events list -->
     <b-table
@@ -78,6 +50,7 @@
 <script>
 import { BTable, BButton } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import store from '../store/index'
 import apiService from '../helper/ApiService'
 
 export default {
@@ -99,42 +72,49 @@ export default {
         'end_date',
         'actions',
       ],
-      events: [],
+      // events: [],
       id: '',
       del: '',
     }
   },
+
+  computed: {
+    events() {
+      return this.$store.getters.getEvents
+    },
+  },
+
   mounted() {
     this.getEvents()
   },
+
   methods: {
     async getEvents() {
       const res = await apiService.getEvents('http://127.0.0.1:8000/api/events')
-      console.log(res.data)
-      this.events = res.data
-    },
-
-    async updateEvents() {
-      // sample data
-      const sample = {
-        event_name: 'Annual Assembly',
-        organizer: 'Harv',
-      }
-      const res = await apiService.updateEvent(
-        `http://127.0.0.1:8000/api/event/${this.id}`,
-        sample,
-      )
-      console.log(res)
-      this.getEvents()
+      store.commit('setEvents', res.data)
+      // this.events = res.data
     },
     async deleteEvent(id) {
-      const res = await apiService.deleteEvent(
-        `http://127.0.0.1:8000/api/event/${id}`,
-      )
-      console.log(res)
+      await apiService.deleteEvent(`http://127.0.0.1:8000/api/event/${id}`)
+
+      this.$store.commit('deleteEvents', id)
       this.getEvents()
     },
   },
+
+  //   async updateEvents() {
+  //     // sample data
+  //     const sample = {
+  //       event_name: 'Annual Assembly',
+  //       organizer: 'Harv',
+  //     }
+  //     const res = await apiService.updateEvent(
+  //       `http://127.0.0.1:8000/api/event/${this.id}`,
+  //       sample,
+  //     )
+  //     console.log(res)
+  //     this.getEvents()
+  //   },
 
   // created() {
   //   this.getEvents();

@@ -1,17 +1,5 @@
 <template>
   <div>
-    <!-- Update Event Button -->
-    <router-link :to="`/update-events/${id}`">
-      <b-button
-        variant="outline-info"
-        class="mb-2"
-      >
-        <b-icon
-          icon="pencil"
-          aria-hidden="true"
-        /> Update Event
-      </b-button>
-    </router-link>
     <b-form @submit.prevent>
       <b-row>
         <!-- event name -->
@@ -40,6 +28,7 @@
               v-model="update_event.description"
               type="text"
               placeholder="Event Description"
+              readonly
             />
           </b-form-group>
         </b-col>
@@ -51,6 +40,7 @@
             id="start-date"
             v-model="update_event.start_date"
             class="mb-1"
+            disabled
           />
         </b-col>
         <!-- end-date -->
@@ -60,6 +50,7 @@
             id="end-date"
             v-model="update_event.end_date"
             class="mb-1"
+            disabled
           />
         </b-col>
         <!-- event-organizer -->
@@ -72,11 +63,47 @@
               id="v-event-organizer"
               v-model="update_event.organizer"
               placeholder="Event Organizer"
+              readonly
             />
           </b-form-group>
         </b-col>
       </b-row>
     </b-form>
+    <!-- Update Event Button -->
+    <!-- <router-link :to="`/update-events/${id}`">
+      <b-button
+        variant="outline-info"
+        class="mb-2"
+      >
+        <b-icon
+          icon="pencil"
+          aria-hidden="true"
+        /> Update Event
+      </b-button>
+    </router-link>
+    -->
+
+    <!-- update and cancel -->
+
+    <router-link :to="`/update-events/${id}`">
+      <b-button
+        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+        type="submit"
+        variant="primary"
+        class="mr-1"
+      >
+        Update
+      </b-button>
+    </router-link>
+    <router-link to="/events-list">
+      <b-button
+        v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+        type="reset"
+        variant="outline-secondary"
+      >
+        Cancel
+      </b-button>
+    </router-link>
   </div>
 </template>
 
@@ -91,7 +118,7 @@ import {
   BFormDatepicker,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import apiService from '../helper/ApiService'
+// import apiService from '../helper/ApiService'
 
 export default {
   name: 'UpdateEvent',
@@ -124,12 +151,13 @@ export default {
   },
   created() {},
   methods: {
-    async getEventById() {
-      const res = await apiService.getEventsById(
-        `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+    getEventById() {
+      // const res = await apiService.getEventsById(
+      //   `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+      // )
+      this.update_event = this.$store.getters.getEvents.find(
+        el => el.id === parseInt(this.$route.params.id, 10),
       )
-      this.update_event = res.data
-      console.log(this.update_event)
     },
   },
 }

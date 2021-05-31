@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/event',[EventController::class, 'store']);
 Route::get('/events',[EventController::class, 'index']);
+Route::get('/deleted/events',[EventController::class, 'getAllDeleted']);
 Route::get('/event/{id}', [EventController::class, 'getEventById']);
 Route::put('/event/{id}', [EventController::class, 'update']);
 Route::delete('event/{id}', [EventController::class, 'destroy']);

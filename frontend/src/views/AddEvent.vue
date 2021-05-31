@@ -62,9 +62,8 @@
         </b-form-group>
       </b-col>
 
-      <!-- submit and cancel -->
+      <!-- add and cancel -->
       <b-col cols="12">
-        <!-- <router-link to="/events-list"> -->
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           type="submit"
@@ -129,10 +128,11 @@ export default {
   },
   methods: {
     async addEvents() {
-      await apiService.addEvent(
+      const t = await apiService.addEvent(
         'http://127.0.0.1:8000/api/event',
         this.new_event,
       )
+      console.log(t)
       this.$router.push({ name: 'events-list' })
     },
   },

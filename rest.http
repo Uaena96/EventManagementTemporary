@@ -1,27 +1,32 @@
-# ###
-# POST http://127.0.0.1:8000/api/event
-# Content-Type: application/json
+###
+POST http://127.0.0.1:8000/api/event
+Content-Type: application/json
 
-# {
-#     "event_name" : "Capstone Meeting",
-#     "description" : "Proposal Template",
-#     "start_date" : "2021-05-08T11:33:13.035Z",
-#     "end_date" : "2021-05-08T11:33:13.035Z",
-#     "organizer" : "gojo"
-# }
+{
+    "event_name" : "Capstone Meeting",
+    "description" : "Proposal Template",
+    "start_date" : "2021-05-08T11:33:13.035Z",
+    "end_date" : "2021-05-08T11:33:13.035Z",
+    "organizer" : "gojo"
+}
 
 ###
 GET http://127.0.0.1:8000/api/events
+
+###
+GET http://127.0.0.1:8000/api/deleted/events
+
+
 
 # ###
 # GET http://127.0.0.1:8000/api/event/5
 
 # ###
-# PUT http://127.0.0.1:8000/api/event/11
+# PUT http://127.0.0.1:8000/api/event/104
 # Content-Type: application/json 
 
 # {
-#     "event_name" : "Annual Assembly"
+#     "event_name" : "Fiesta sa amoa"
 # }
-###
-DELETE http://127.0.0.1:8000/api/event/86
+# ###
+# DELETE http://127.0.0.1:8000/api/event/86

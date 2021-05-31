@@ -100,6 +100,7 @@ import {
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import apiService from '../helper/ApiService'
+import store from '../store/index'
 
 export default {
   name: 'UpdateEvent',
@@ -131,17 +132,22 @@ export default {
   },
   created() {},
   methods: {
-    async getEventById() {
-      const res = await apiService.getEventsById(
-        `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+    getEventById() {
+      // const res = await apiService.getEventsById(
+      //   `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
+      // )
+      this.update_event = store.getters.getEvents.find(
+        el => el.id === parseInt(this.$route.params.id),
       )
-      this.update_event = res.data
+      console.log(this.update_event)
     },
+
     async updateEvents() {
       await apiService.updateEvent(
         `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
         this.update_event,
       )
+      store.commit('setEventById', this.$route.params.id, this.update_event)
       this.$router.push({ name: 'events-list' })
     },
   },
