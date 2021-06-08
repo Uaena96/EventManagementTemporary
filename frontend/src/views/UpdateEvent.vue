@@ -69,7 +69,7 @@
           type="submit"
           variant="primary"
           class="mr-1"
-          @click="updateEvents"
+          @click="submitEvent"
         >
           Update
         </b-button>
@@ -99,7 +99,7 @@ import {
   BFormDatepicker,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import apiService from '../helper/ApiService'
+import { mapActions } from 'vuex'
 import store from '../store/index'
 
 export default {
@@ -125,6 +125,7 @@ export default {
         end_date: '',
         organizer: '',
       },
+      id: 0,
     }
   },
   mounted() {
@@ -133,21 +134,13 @@ export default {
   created() {},
   methods: {
     getEventById() {
-      // const res = await apiService.getEventsById(
-      //   `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
-      // )
       this.update_event = store.getters.getEvents.find(
-        el => el.id === parseInt(this.$route.params.id),
+        el => el.id === parseInt(this.$route.params.id, 10),
       )
-      console.log(this.update_event)
     },
-
-    async updateEvents() {
-      await apiService.updateEvent(
-        `http://127.0.0.1:8000/api/event/${this.$route.params.id}`,
-        this.update_event,
-      )
-      store.commit('setEventById', this.$route.params.id, this.update_event)
+    ...mapActions(['updateEvent']),
+    submitEvent() {
+      this.updateEvent(this.update_event, this.updateEvent.id)
       this.$router.push({ name: 'events-list' })
     },
   },

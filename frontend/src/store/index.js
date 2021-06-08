@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+// Api service
+import apiService from '../helper/ApiService'
+
 // Modules
 import app from './app'
 import appConfig from './app-config'
@@ -12,26 +15,55 @@ export default new Vuex.Store({
   state: {
     events: [],
   },
+
   getters: {
     getEvents(state) {
       return state.events
     },
   },
+
   mutations: {
     setEvents(state, events) {
       state.events = events
     },
 
-    setEventById(state, eventId, event) {
-      state.events[eventId] = event
-    },
-
-    deleteEvents(state, eventId) {
-      const event = state.events.find(el => el.id === parseInt(eventId, 10))
-      const index = state.events.indexOf(event)
-      state.events.slice(index, state.events.lenght)
+    setEvent(state, event) {
+      state.events.push(event)
     },
   },
+
+  actions: {
+    async getEvents({ commit }) {
+      const res = await apiService.getEvents('http://127.0.0.1:8000/api/events')
+      commit('setEvents', res.data)
+    },
+
+    async addEvents({ commit }, event) {
+      await apiService.addEvent('http://127.0.0.1:8000/api/event', event)
+      commit('setEvent', event)
+    },
+
+    async deleteEvent({ commit }, id) {
+      await apiService.deleteEvent(`http://127.0.0.1:8000/api/event/${id}`)
+      let events = this.getters.getEvents
+      events = events.filter(value => value.id !== parseInt(id, 10))
+
+      commit('setEvents', events)
+    },
+
+    async updateEvent({ commit }, event, id) {
+      await apiService.updateEvent(
+        `http://127.0.0.1:8000/api/event/${id}`,
+        event,
+      )
+      let events = this.getters.getEvents
+      events = events.filter(value => value.id !== parseInt(id, 10))
+      
+      commit('setEvents', events)
+      commit('setEvent', event)
+    },
+  },
+
   modules: {
     app,
     appConfig,

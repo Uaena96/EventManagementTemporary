@@ -50,8 +50,7 @@
 <script>
 import { BTable, BButton } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import store from '../store/index'
-import apiService from '../helper/ApiService'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'EventsList',
@@ -79,9 +78,9 @@ export default {
   },
 
   computed: {
-    events() {
-      return this.$store.getters.getEvents
-    },
+    ...mapGetters({
+      events: 'getEvents',
+    }),
   },
 
   mounted() {
@@ -89,36 +88,8 @@ export default {
   },
 
   methods: {
-    async getEvents() {
-      const res = await apiService.getEvents('http://127.0.0.1:8000/api/events')
-      store.commit('setEvents', res.data)
-      // this.events = res.data
-    },
-    async deleteEvent(id) {
-      await apiService.deleteEvent(`http://127.0.0.1:8000/api/event/${id}`)
-
-      this.$store.commit('deleteEvents', id)
-      this.getEvents()
-    },
+    ...mapActions(['getEvents', 'deleteEvent']),
   },
-
-  //   async updateEvents() {
-  //     // sample data
-  //     const sample = {
-  //       event_name: 'Annual Assembly',
-  //       organizer: 'Harv',
-  //     }
-  //     const res = await apiService.updateEvent(
-  //       `http://127.0.0.1:8000/api/event/${this.id}`,
-  //       sample,
-  //     )
-  //     console.log(res)
-  //     this.getEvents()
-  //   },
-
-  // created() {
-  //   this.getEvents();
-  // }
 }
 </script>
 

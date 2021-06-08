@@ -69,7 +69,7 @@
           type="submit"
           variant="primary"
           class="mr-1"
-          @click="addEvents"
+          @click="getNewEvent"
         >
           Submit
         </b-button>
@@ -99,7 +99,7 @@ import {
   BFormDatepicker,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import apiService from '../helper/ApiService'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'AddEvent',
@@ -127,12 +127,9 @@ export default {
     }
   },
   methods: {
-    async addEvents() {
-      const t = await apiService.addEvent(
-        'http://127.0.0.1:8000/api/event',
-        this.new_event,
-      )
-      console.log(t)
+    ...mapActions(['addEvents']),
+    getNewEvent() {
+      this.addEvents(this.new_event)
       this.$router.push({ name: 'events-list' })
     },
   },
