@@ -56,11 +56,10 @@ export default new Vuex.Store({
         `http://127.0.0.1:8000/api/event/${id}`,
         event,
       )
-      let events = this.getters.getEvents
-      events = events.filter(value => value.id !== parseInt(id, 10))
-      
+      const events = this.getters.getEvents
+      const eventIndex = events.findIndex(item => item.id === parseInt(id, 10))
+      events[eventIndex] = event
       commit('setEvents', events)
-      commit('setEvent', event)
     },
   },
 
